@@ -83,9 +83,9 @@ const main = async (stocks_arr) => {
 app.get('/', (req, res) => {
     res.send(`${date}에 최신화되었습니다.<br>아래 데이터들은 괴리율을 기준으로 오름차순 정렬되어있습니다.<br>` + webString);
 });
-const server = app.listen(80, () => { 
+const server = app.listen(443, () => { 
     console.log('Server is running!');
 });
 
-
+ 
 main(kospi100_kosdaq100_arr);
