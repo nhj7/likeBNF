@@ -81,11 +81,15 @@ const main = async (stocks_arr) => {
 }
 
 app.get('/', (req, res) => {
-    res.send(`${date}에 최신화되었습니다.<br>아래 데이터들은 괴리율을 기준으로 오름차순 정렬되어있습니다.<br>` + webString);
+    res.send(`<meta name="viewport" content="width=device-width, initial-scale=1"> ${date}에 최신화되었습니다.<br>아래 데이터들은 괴리율을 기준으로 오름차순 정렬되어있습니다.<br>` + webString);
 });
-const server = app.listen(process.env.PORT, () => { 
+const server = app.listen(process.env.PORT || 3000, () => { 
     console.log('Server is running!');
 });
 
+/* Prevent Sleep in Heroku Server */
+setInterval(function () {
+    http.get(process.env.PORT ? "https://like-bnf.herokuapp.com":"http://localhost:3000");
+}, 600000); // every 10 minutes
  
 main(kospi100_kosdaq100_arr);
