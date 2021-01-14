@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-    ,"start":"node app.js"
+    //,"start": "forever start app.js"
+    ,"start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/lleellee0/likeBNF#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "forever": "^3.0.4",
     "request": "^2.88.0"
   }
 }

@@ -95,7 +95,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 });
 
 /* Prevent Sleep in Heroku Server */
-var http = require("http");
+var http = require(process.env.PORT ?"https":"http");
 //http.get(process.env.PORT ? "https://like-bnf.herokuapp.com":"http://localhost:3000");
 setInterval(function () {
     console.log("setInterval.");
