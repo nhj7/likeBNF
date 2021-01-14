@@ -96,10 +96,20 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 /* Prevent Sleep in Heroku Server */
 var http = require(process.env.PORT ?"https":"http");
-http.get(process.env.PORT ? "https://like-bnf.herokuapp.com":"http://localhost:3000");
-setInterval(function () {
-    console.log("setInterval.");
+try{
     http.get(process.env.PORT ? "https://like-bnf.herokuapp.com":"http://localhost:3000");
+}catch(e){
+    console.error(e);
+}
+
+setInterval(function () {
+    try {
+        console.log("setInterval.");
+        http.get(process.env.PORT ? "https://like-bnf.herokuapp.com":"http://localhost:3000");    
+    } catch (e) {
+        console.error(e);
+    }
+    
 }, 600000); // every 10 minutes
  
 main(kospi100_kosdaq100_arr);
