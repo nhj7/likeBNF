@@ -4839,30 +4839,36 @@ let date = new Date();
 
 const getIssueObject = async (name, symbol, from_time) => {
     return new Promise(async (resolve, reject) => {
-        let history_obj = await history.getHistory(symbol, from_time, Date.now());
-        let history_arr = history.transferObjToArr(history_obj);
-        history_arr = history.calcMovingAverage25(history_arr);
-        history_arr = history.calcDifferenceRate(history_arr);
 
-        history_arr = statistics.calcCeilDifferenceRate(history_arr);
-        
-        let issue_obj = {};
-        
-        issue_obj.name = name;
-        issue_obj.price = history_arr[history_arr.length-1].close_price;
-        issue_obj.ma25 = history_arr[history_arr.length-1].ma25;
-        issue_obj.difference_rate = history_arr[history_arr.length-1].difference_rate;
-        issue_obj.ceiled_difference_rate = history_arr[history_arr.length-1].ceiled_difference_rate;
-        issue_obj.in_3_days = statistics.calcNdaySuccessRate(history_arr, 3, target_profit);
-        issue_obj.in_3_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 3);
-        issue_obj.in_5_days = statistics.calcNdaySuccessRate(history_arr, 5, target_profit);
-        issue_obj.in_5_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 5);
-        issue_obj.in_7_days = statistics.calcNdaySuccessRate(history_arr, 7, target_profit);
-        issue_obj.in_7_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 7);
+        try{
+            let history_obj = await history.getHistory(symbol, from_time, Date.now());
+            let history_arr = history.transferObjToArr(history_obj);
+            history_arr = history.calcMovingAverage25(history_arr);
+            history_arr = history.calcDifferenceRate(history_arr);
 
-        console.log(`종목/괴리율: ${issue_obj.name}/${floor2Digits(issue_obj.difference_rate)}%`);
+            history_arr = statistics.calcCeilDifferenceRate(history_arr);
+            
+            let issue_obj = {};
+            
+            issue_obj.name = name;
+            issue_obj.price = history_arr[history_arr.length-1].close_price;
+            issue_obj.ma25 = history_arr[history_arr.length-1].ma25;
+            issue_obj.difference_rate = history_arr[history_arr.length-1].difference_rate;
+            issue_obj.ceiled_difference_rate = history_arr[history_arr.length-1].ceiled_difference_rate;
+            issue_obj.in_3_days = statistics.calcNdaySuccessRate(history_arr, 3, target_profit);
+            issue_obj.in_3_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 3);
+            issue_obj.in_5_days = statistics.calcNdaySuccessRate(history_arr, 5, target_profit);
+            issue_obj.in_5_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 5);
+            issue_obj.in_7_days = statistics.calcNdaySuccessRate(history_arr, 7, target_profit);
+            issue_obj.in_7_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 7);
 
-        resolve(issue_obj);
+            console.log(`종목/괴리율: ${issue_obj.name}/${floor2Digits(issue_obj.difference_rate)}%`);
+
+            resolve(issue_obj);
+        }catch(err){
+            console.error("getIssueObject",err)
+            reject(err);
+        }
     });
 }
 
@@ -4870,7 +4876,12 @@ const main = async (stocks_arr) => {
     let issue_obj_arr = [];
 
     for(let i = 0; i < stocks_arr.length; i++) {
-        issue_obj_arr.push(await getIssueObject(stocks_arr[i].name, stocks_arr[i].symbol, '1245660137'));
+        try{
+            issue_obj_arr.push(await getIssueObject(stocks_arr[i].name, stocks_arr[i].symbol, '1245660137'));
+        }catch(err){
+            console.error(err)
+        }
+        
     }
 
     issue_obj_arr.sort((a, b) => {
