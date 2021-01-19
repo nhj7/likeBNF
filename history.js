@@ -2,7 +2,9 @@ const request = require('request');
 
 const getHistory = (symbol, from, to) => {
     return new Promise((resolve, reject) => {
-        request(`https://tvc4.forexpros.com/227407a1d8a6d5ef9f47bc2f1f9d6c9e/${Date.now()}/18/18/88/history?symbol=${symbol}&resolution=D&from=${from}&to=${to}`, function (error, response, body) {
+        let req_url = `https://tvc4.forexpros.com/227407a1d8a6d5ef9f47bc2f1f9d6c9e/${Date.now()}/18/18/88/history?symbol=${symbol}&resolution=D&from=${from}&to=${to}`;
+        //console.log(req_url)
+        request(req_url, function (error, response, body) {
             if(error) {
                 console.log('error:', error);
                 return;
