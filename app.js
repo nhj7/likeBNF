@@ -2562,7 +2562,7 @@ const isDev = process.env.PORT ? true : false;
 let webString = "데이터 준비중입니다.";
 let date = new Date();
 
-const getIssueObject = async (name, symbol, from_time) => {
+const getIssueObject = async (name, symbol, from_time, idx) => {
     return new Promise(async (resolve, reject) => {
 
         try{
@@ -2587,7 +2587,7 @@ const getIssueObject = async (name, symbol, from_time) => {
             issue_obj.in_7_days = statistics.calcNdaySuccessRate(history_arr, 7, target_profit);
             issue_obj.in_7_days.profit_rate = statistics.calcNdayProfitRate(history_arr, 7);
 
-            console.log(`종목/괴리율: ${issue_obj.name}/${floor2Digits(issue_obj.difference_rate)}%`);
+            console.log(`${idx}.종목/괴리율: ${issue_obj.name}/${floor2Digits(issue_obj.difference_rate)}%`);
 
             resolve(issue_obj);
         }catch(err){
@@ -2602,7 +2602,7 @@ const main = async (stocks_arr) => {
 
     for(let i = 0; i < stocks_arr.length; i++) {
         try{
-            issue_obj_arr.push(await getIssueObject(stocks_arr[i].name, stocks_arr[i].symbol, '1245660137'));
+            issue_obj_arr.push(await getIssueObject(stocks_arr[i].name, stocks_arr[i].symbol, '1245660137', i));
         }catch(err){
             console.error(err)
         }
@@ -2610,7 +2610,7 @@ const main = async (stocks_arr) => {
     }
 
     issue_obj_arr.sort((a, b) => {
-        return a.difference_rate - b.difference_rate;
+        return parseFloat(a.difference_rate) - parseFloat(b.difference_rate);
     })
 
     webString = '';
